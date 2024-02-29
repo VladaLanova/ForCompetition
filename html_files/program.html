@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма для освітньої програми</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="mb-0">Форма для Освітньої Програми</h2>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="university">Університет</label>
+                                <input type="text" class="form-control" id="university" placeholder="Введіть університет" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="programName">Назва освітньої програми</label>
+                                <input type="text" class="form-control" id="programName" placeholder="Введіть назву програми" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="faculty">Факультет</label>
+                                <input type="text" class="form-control" id="faculty" placeholder="Введіть факультет" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="specialty">Спеціальність</label>
+                                <input type="text" class="form-control" id="specialty" placeholder="Введіть спеціальність" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Зберегти</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+document.querySelector('form').addEventListener('submit', async function (e) {
+    e.preventDefault(); 
+    const university = document.getElementById('university').value;
+    const programName = document.getElementById('programName').value;
+    const faculty = document.getElementById('faculty').value;
+    const specialty = document.getElementById('specialty').value;
+
+    const response = await fetch('http://localhost:3000/saveEducationalProgram', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ university, programName, faculty, specialty }),
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+        alert(result.message);
+    } else {
+        alert(result.error);
+    }
+});
+    </script>
+</body>
+</html>

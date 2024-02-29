@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Інформація про групу</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="mb-0">Інформація про групу</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="groupForm">
+                            <div class="form-group">
+                                <label for="groupName">Назва групи</label>
+                                <input type="text" class="form-control" id="groupName" placeholder="Введіть назву групи" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="course">Курс</label>
+                                <input type="number" class="form-control" id="course" placeholder="Введіть курс" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="studentsCount">Кількість студентів</label>
+                                <input type="number" class="form-control" id="studentsCount" placeholder="Введіть кількість студентів" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="educationForm">Форма навчання</label>
+                                <input type="text" class="form-control" id="educationForm" placeholder="Введіть форму навчання" required>
+                            </div>
+                            <button type="button" class="btn btn-primary" onclick="saveGroup()">Зберегти</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        async function saveGroup() {
+            const groupName = document.getElementById('groupName').value;
+            const course = document.getElementById('course').value;
+            const numberOfStudents = document.getElementById('studentsCount').value;
+            const studyForm = document.getElementById('educationForm').value;
+
+            try {
+                const response = await fetch('/saveGroup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ groupName, course, numberOfStudents, studyForm })
+                });
+
+                const result = await response.json();
+                alert(result.message);
+            } catch (error) {
+                console.error('Помилка при збереженні в блокчейні:', error.message);
+                alert('Виникла помилка при збереженні в блокчейні.');
+            }
+        }
+    </script>
+</body>
+</html>

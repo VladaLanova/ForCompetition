@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма для дисциплін</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="mb-0">Форма для дисциплін</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="disciplineForm">
+                            <div class="form-group">
+                                <label for="programName">Назва освітньої програми</label>
+                                <input type="text" class="form-control" id="programName" placeholder="Введіть назву програми" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="hour">Кількість годин</label>
+                                <input type="number" class="form-control" id="hour" placeholder="Введіть кількість годин" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="credits">Кількість кредитів</label>
+                                <input type="number" class="form-control" id="credits" placeholder="Введіть кількість кредитів" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="disciplineName">Назва дисципліни</label>
+                                <input type="text" class="form-control" id="disciplineName" placeholder="Введіть назву дисципліни" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="assessmentForm">Форма контролю знань</label>
+                                <input type="text" class="form-control" id="assessmentForm" placeholder="Введіть форму контролю" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="semester">Семестр</label>
+                                <input type="number" class="form-control" id="semester" placeholder="Введіть номер семестру" required>
+                            </div>
+                            <button type="button" class="btn btn-primary" onclick="submitDisciplineForm()">Зберегти</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script type = "module">
+            async function submitDisciplineForm() {
+            const programName = document.getElementById('programName').value;
+            const hour = document.getElementById('hour').value;
+            const credits = document.getElementById('credits').value;
+            const name = document.getElementById('disciplineName').value;
+            const assessmentForm = document.getElementById('assessmentForm').value;
+            const semester = document.getElementById('semester').value;
+
+            const response = await fetch('http://localhost:3000/saveDiscipline', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({programName, hour, credits, name, assessmentForm, semester}),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert(result.message);
+            } else {
+                alert(result.error);
+            }
+        }
+    </script>
+</body>
+</html>

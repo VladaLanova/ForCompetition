@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Інформація про студента</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="mb-0">Інформація про студента</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="studentForm">
+                            <div class="form-group">
+                                <label for="individualPlanNumber">№ індивідуального навчального плану</label>
+                                <input type="number" class="form-control" id="individualPlanNumber" placeholder="Введіть № індивідуального навчального плану" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="studentName">ПІБ студента</label>
+                                <input type="text" class="form-control" id="studentName" placeholder="Введіть ПІБ студента" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="groupName">Група</label>
+                                <input type="text" class="form-control" id="groupName" placeholder="Введіть групу" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="fundingForm">Форма фінансування навчання</label>
+                                <input type="text" class="form-control" id="fundingForm" placeholder="Введіть форму фінансування навчання" required>
+                            </div>
+                            <button type="button" class="btn btn-primary" onclick="saveStudent()">Зберегти</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        async function saveStudent() {
+            const individualPlanNumber = document.getElementById('individualPlanNumber').value;
+            const studentName = document.getElementById('studentName').value;
+            const groupName = document.getElementById('groupName').value;
+            const fundingForm = document.getElementById('fundingForm').value;
+
+            try {
+                const response = await fetch('/saveStudent', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ individualPlanNumber, studentName, groupName, fundingForm })
+                });
+
+                const result = await response.json();
+                alert(result.message);
+            } catch (error) {
+                console.error('Помилка при збереженні в базі даних:', error.message);
+                alert('Виникла помилка при збереженні в базі даних.');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Відомість</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="mb-0">Відомість</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="examInfoForm">
+                            <div class="form-group">
+                                <label for="examNumber">№ відомості</label>
+                                <input type="text" class="form-control" id="examNumber" placeholder="Введіть № відомості" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="academicYear">Навчальний рік</label>
+                                <input type="text" class="form-control" id="academicYear" placeholder="Введіть навчальний рік" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="discipline">Дисципліна</label>
+                                <input type="text" class="form-control" id="discipline" placeholder="Введіть дисципліну" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="unexcusedAbsences">К-ть недопущених</label>
+                                <input type="number" class="form-control" id="unexcusedAbsences" placeholder="Введіть к-ть недопущених" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="groupName">Назва групи</label>
+                                <input type="text" class="form-control" id="groupName" placeholder="Введіть назву групи" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="attendanceCount">К-ть присутніх</label>
+                                <input type="number" class="form-control" id="attendanceCount" placeholder="Введіть к-ть присутніх" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="examDate">Дата складання</label>
+                                <input type="date" class="form-control" id="examDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="teacherName">ПІБ викладача</label>
+                                <input type="text" class="form-control" id="teacherName" placeholder="Введіть ПІБ викладача" required>
+                            </div>
+                            <button type="button" class="btn btn-primary" onclick="saveExamInfo()">Зберегти</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        async function saveExamInfo() {
+            const examNumber = document.getElementById('examNumber').value;
+            const academicYear = document.getElementById('academicYear').value;
+            const discipline = document.getElementById('discipline').value;
+            const unexcusedAbsences = document.getElementById('unexcusedAbsences').value;
+            const groupName = document.getElementById('groupName').value;
+            const attendanceCount = document.getElementById('attendanceCount').value;
+            const examDate = document.getElementById('examDate').value;
+            const teacherName = document.getElementById('teacherName').value;
+
+            try {
+                const response = await fetch('/saveExamInfo', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ examNumber, academicYear, discipline, unexcusedAbsences, groupName, attendanceCount, examDate, teacherName })
+                });
+
+                const result = await response.json();
+                alert(result.message);
+            } catch (error) {
+            }
+        }
+    </script>
+</body>
+</html>

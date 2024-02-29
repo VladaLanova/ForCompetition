@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Інформація про результати</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="mb-0">Інформація про результати</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="resultsForm">
+                            <div class="form-group">
+                                <label for="points">Кількість балів</label>
+                                <input type="number" class="form-control" id="pointsCount" placeholder="Введіть кількість балів" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ects">ECTS</label>
+                                <input type="text" class="form-control" id="ects" placeholder="Введіть ECTS" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="informationId">№ відомості</label>
+                                <input type="number" class="form-control" id="informationNumber" placeholder="Введіть № відомості" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="studentName">ПІБ студента</label>
+                                <input type="text" class="form-control" id="studentName" placeholder="Введіть ПІБ студента" required>
+                            </div>
+                            <button type="button" class="btn btn-primary" onclick="saveResults()">Зберегти</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        async function saveResults() {
+            const points = document.getElementById('pointsCount').value;
+            const ects = document.getElementById('ects').value;
+            const informationId = document.getElementById('informationNumber').value;
+            const studentName = document.getElementById('studentName').value;
+
+            try {
+                const response = await fetch('/saveResults', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ points, ects, informationId, studentName })
+                });
+
+                const result = await response.json();
+                alert(result.message);
+            } catch (error) {
+                console.error('Помилка при збереженні в блокчейні:', error.message);
+                alert('Виникла помилка при збереженні в блокчейні.');
+            }
+        }
+    </script>
+</body>
+</html>
