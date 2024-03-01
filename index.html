@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style_site.css">
+    <title>IPFS File Upload and Download</title>
+</head>
+<body>
+    <div class="header">
+        <h1>IPFS File Upload and Download</h1>
+    </div>
+
+    <div class="content">
+        <p class="main-content-title">Upload a File to IPFS</p>
+        <label for="fileInput" class="custom-file-upload">
+            <i class="fa fa-cloud-upload" style="font-size:20px"></i> Choose your file, please
+        </label>
+        <input id="fileInput" type="file" />
+        <button class="main-content-button" id="uploadButton">
+            Upload
+        </button>
+
+        <p class="main-content-title">Uploaded File IPFS Hash</p>
+        <input id="fileHash" type="text" size="64" readonly>
+
+        <p class="main-content-title">Download File from IPFS</p>
+        <input id="hashForDownload" type="text" placeholder="Enter IPFS Hash">
+        <button class="main-content-button" id="downloadButton">
+            Download
+        </button>
+        <a href="#" id="downloadLink" style="display: none">Download File</a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ipfs/dist/index.min.js"></script>
+    <script src="./assets/ipfs-mini.js"></script>
+    <script>
+        const IPFS = window.Ipfs;
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const customBootstrapNodes = [
+                    '/dns4/ipfs.infura.io/wss/p2p/Qmbh6oHeCDYb6ASiXP2ugEP5PqBtwLytQAzDgERe4DcyiB', // Вузол Bootstrap 1
+                    '/dns4/ipfs.dweb.link/wss/p2p/QmYZXtVx6vgEzGdVhKh1easDHaZHTf9mpurF8Xf9qapUdo', // Вузол Bootstrap 2
+                ];
+
+                const ipfs = await IPFS.create({
+                    config: {
+                        Bootstrap: customBootstrapNodes,
+                    },
+                });
+
+                console.log('IPFS is ready');
+
+                const fileInput = document.getElementById('fileInput');
+                const uploadButton = document.getElementById('uploadButton');
+                const downloadButton = document.getElementById('downloadButton');
+                const hashForDownload = document.getElementById('hashForDownload');
+                let ipfsHash = null;
+
+                uploadButton.addEventListener('click', async function () {
+                    const file = fileInput.files[0];
+
+                    if (!file) {
+                        alert('Please select a file to upload.');
+                        return;
+                    }
+
+                    const reader = new FileReader();
+
+                    reader.onload = async function () {
+                        const fileData = reader.result;
+
+                        console.log("Uploading file to IPFS...");
+                        const results = await ipfs.add({ content: fileData });
+
+                        if (results && results.cid) {
+                            ipfsHash = results.cid.toString();
+                            document.getElementById('fileHash').value = ipfsHash;
+                            alert('File uploaded to IPFS with hash: ' + ipfsHash);
+                            console.log("File uploaded to IPFS with hash:", ipfsHash);
+                        } else {
+                            console.error('Error uploading file to IPFS: Invalid result', results);
+                        }
+                    };
+
+                    reader.readAsArrayBuffer(file);
+                });
+
+                downloadButton.addEventListener('click', async function () {
+                    if (!hashForDownload.value) {
+                        alert('Please enter a hash for download.');
+                        return;
+                    }
+
+                    console.log("Downloading file from IPFS...");
+                    const stream = ipfs.cat(hashForDownload.value);
+
+                    const data = [];
+                    for await (const chunk of stream) {
+                        data.push(chunk);
+                    }
+
+                    const response = await fetch(`https://ipfs.io/ipfs/${hashForDownload.value}`);
+                    const contentType = response.headers.get('content-type');
+
+                    const blob = new Blob(data, { type: contentType });
+                    const url = window.URL.createObjectURL(blob);
+
+                    const downloadLink = document.getElementById('downloadLink');
+                    downloadLink.href = url;
+                    downloadLink.download = `downloaded_file.${contentType.split("/")[1]}`;
+                    downloadLink.style.display = 'block';
+
+                    console.log("File downloaded from IPFS.");
+                });
+            } catch (error) {
+                console.error('IPFS initialization error', error);
+            }
+        });
+    </script>
+</body>
+</html>
