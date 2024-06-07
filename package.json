@@ -21,7 +21,7 @@
     "http-server": "^14.1.1",
     "jest-cli": "^29.7.0",
     "live-server": "^1.2.2",
-    "msnodesqlv8": "^4.1.2",
+    "msnodesqlv8": "^4.2.1",
     "mssql": "^10.0.2",
     "text-encoding": "^0.7.0"
   },
